@@ -10,45 +10,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProjectModule.Repository.Repository
 {
-    public class ProjectRepository: IProjectRepository
+    public class ProjectRepository : IProjectRepository
     {
         IMongoRepository<ProjectDocument> _db;
         IServiceProvider _service;
-        System.Threading.CancellationToken cancellation;
+
         public ProjectRepository(IServiceProvider service, IMongoRepository<ProjectDocument> db)
         {
             _service = service;
             _db = db;
-            cancellation = new System.Threading.CancellationToken();
+
         }
-        public async Task<Project> getProjcectByID(string id)
+        public async Task<Project> getProjcectByID(string id, CancellationToken cancellation)
         {
-            var document = await getByID(id);
+            var document = await getByID(id, cancellation);
             return ToProject(document);
         }
-        public async Task<Project> GetAgentByTitle(string Title)
+        public async Task<Project> GetByTitle(string Title, CancellationToken cancellation)
         {
             var document = await _db.GetOneAsync(x => x.Title == Title, cancellation);
             return ToProject(document);
         }
-        public async Task AddProject(Project prject)
+        public async Task AddProject(Project prject, CancellationToken cancellation)
         {
             var prjDocument = ToProjectDocument(prject);
             await _db.AddAsync(prjDocument, cancellation);
             prject.id = prjDocument.Id;
         }
-        public async Task UpdateProject(string id, Project prject)
+        public async Task UpdateProject(string id, Project prject, CancellationToken cancellation)
         {
             var document = ToProjectDocument(prject);
             document.UpdatedAt = DateTime.UtcNow;
             await _db.UpdateOneAsync(id, document, cancellation);
         }
 
-        
+
         public async Task<ProjectCollection> GetAllWithPagingAsync(string keywork, int? page, int? pageSize)
         {
             Expression<Func<ProjectDocument, bool>> query = (x) => (x.Title.Contains(keywork));
@@ -60,7 +61,7 @@ namespace ProjectModule.Repository.Repository
             return projects;
         }
 
-        private async Task<ProjectDocument> getByID(string id)
+        private async Task<ProjectDocument> getByID(string id, CancellationToken cancellation)
         {
             return await _db.GetByIdAsync(id, cancellation);
         }

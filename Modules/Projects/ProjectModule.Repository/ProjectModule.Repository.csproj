@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libary\Storages\DNH.Storage.MongoDB\DNH.Storage.MongoDB.csproj" />
-    <ProjectReference Include="..\ProjectModule.Abstraction\ProjectModule.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

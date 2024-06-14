@@ -13,11 +13,11 @@ namespace ProjectModule.Services
 {
     public interface IProjectService
     {
-        Task AddProject(Project prject);
-        Task UpdateProject(string id, Project prject);
-        Task<Project> getProjcectByID(string id);
-        Task<Project> GetAgentByTitle(string Title);
-        Task<ProjectCollection> GetPaging(string keyword,int? page = 1, int? pageSize = 10);
+        Task AddProject(Project prject, CancellationToken cancellation);
+        Task UpdateProject(string id, Project prject, CancellationToken cancellation);
+        Task<Project> getProjcectByID(string id, CancellationToken cancellation);
+        Task<Project> GetByTitle(string Title, CancellationToken cancellation);
+        Task<ProjectCollection> GetPaging(string keyword, int? page = 1, int? pageSize = 10);
     }
     public class ProjectService : IProjectService
     {
@@ -27,14 +27,14 @@ namespace ProjectModule.Services
             _projectRepository = projectRepository;
         }
 
-        public async Task AddProject(Project prject)
+        public async Task AddProject(Project prject, CancellationToken cancellation)
         {
-             await _projectRepository.AddProject(prject);
+            await _projectRepository.AddProject(prject, cancellation);
         }
 
-        public async Task<Project> GetAgentByTitle(string Title)
+        public async Task<Project> GetByTitle(string Title, CancellationToken cancellation)
         {
-            return await _projectRepository.GetAgentByTitle(Title);
+            return await _projectRepository.GetByTitle(Title, cancellation);
         }
 
         public async Task<ProjectCollection> GetPaging(string keyword, int? page = 1, int? pageSize = 10)
@@ -42,14 +42,14 @@ namespace ProjectModule.Services
             return await _projectRepository.GetAllWithPagingAsync(keyword, page, pageSize);
         }
 
-        public async Task<Project> getProjcectByID(string id)
+        public async Task<Project> getProjcectByID(string id, CancellationToken cancellation)
         {
-            return await _projectRepository.getProjcectByID(id);
+            return await _projectRepository.getProjcectByID(id, cancellation);
         }
 
-        public async Task UpdateProject(string id, Project prject)
+        public async Task UpdateProject(string id, Project prject, CancellationToken cancellation)
         {
-             await _projectRepository.UpdateProject(id, prject);
+            await _projectRepository.UpdateProject(id, prject, cancellation);
         }
     }
 }

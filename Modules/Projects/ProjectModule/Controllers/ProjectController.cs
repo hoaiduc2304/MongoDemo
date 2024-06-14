@@ -21,11 +21,11 @@ namespace ProjectModule.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProject([FromBody] Project project)
+        public async Task<IActionResult> AddProject([FromBody] Project project, CancellationToken cancellation)
         {
             try
             {
-                await _projectService.AddProject(project);
+                await _projectService.AddProject(project, cancellation);
                 return Ok("Project added successfully.");
             }
             catch (Exception ex)
@@ -35,11 +35,11 @@ namespace ProjectModule.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProjectByID(string id)
+        public async Task<IActionResult> GetProjectByID(string id, CancellationToken cancellation)
         {
             try
             {
-                var project = await _projectService.getProjcectByID(id);
+                var project = await _projectService.getProjcectByID(id, cancellation);
                 if (project == null)
                     return NotFound("Project not found.");
                 return Ok(project);
@@ -51,11 +51,11 @@ namespace ProjectModule.Controllers
         }
 
         [HttpGet("title/{title}")]
-        public async Task<IActionResult> GetProjectByTitle(string title)
+        public async Task<IActionResult> GetProjectByTitle(string title, CancellationToken cancellation)
         {
             try
             {
-                var project = await _projectService.GetAgentByTitle(title);
+                var project = await _projectService.GetByTitle(title, cancellation);
                 if (project == null)
                     return NotFound("Project not found.");
                 return Ok(project);
@@ -81,11 +81,11 @@ namespace ProjectModule.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject(string id, [FromBody] Project project)
+        public async Task<IActionResult> UpdateProject(string id, [FromBody] Project project, CancellationToken cancellation)
         {
             try
             {
-                await _projectService.UpdateProject(id, project);
+                await _projectService.UpdateProject(id, project, cancellation);
                 return Ok("Project updated successfully.");
             }
             catch (Exception ex)
